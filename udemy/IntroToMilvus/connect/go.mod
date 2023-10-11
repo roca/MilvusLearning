@@ -2,6 +2,9 @@ module connect
 
 go 1.21.0
 
+replace github.com/milvus-io/milvus-sdk-go/v2 => ../milvus-sdk-go
+replace github.com/milvus-io/milvus-sdk-go/v2/client => ../milvus-sdk-go/client
+
 require github.com/milvus-io/milvus-sdk-go/v2 v2.3.1
 
 require (
