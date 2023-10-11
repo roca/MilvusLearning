@@ -12,7 +12,6 @@ func main() {
 		log.Fatal("MilvusClient is nil")
 	}
 
-	
 	err := collections.ListAllCollection(context.Background(), collections.MilvusClient)
 	if err != nil {
 		log.Fatal("failed to list collections:", err.Error())
