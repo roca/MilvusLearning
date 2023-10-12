@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/milvus-io/milvus-sdk-go/v2/client"
+	"github.com/milvus-io/milvus-sdk-go/v2/entity"
 )
 
 var MilvusClient *client.Client
@@ -61,6 +63,34 @@ func ListAllCollection(ctx context.Context, client *client.Client) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("collections:", collections)
+	var names []string
+	for _, collection := range collections {
+		names = append(names, collection.Name)
+	}
+	fmt.Println("collections:", strings.Join(names, ", "))
+	return nil
+}
+
+func GetCollectionNames(ctx context.Context, client *client.Client) ([]string, error) {
+	collections, err := (*client).ListCollections(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var names []string
+	for _, collection := range collections {
+		names = append(names, collection.Name)
+	}
+	return names, nil
+}
+
+func CreateCollection(ctx context.Context, client *client.Client, schema *entity.Schema) error {
+	err := (*client).CreateCollection(
+		ctx, // ctx
+		schema,
+		2, // shardNum
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
