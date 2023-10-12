@@ -94,3 +94,11 @@ func CreateCollection(ctx context.Context, client *client.Client, schema *entity
 	}
 	return nil
 }
+
+func DropCollection(ctx context.Context, client *client.Client, collectionName string) error {
+	err :=  (*client).DropCollection(ctx,collectionName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
