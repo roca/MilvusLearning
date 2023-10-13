@@ -41,11 +41,13 @@ var schema = &entity.Schema{
 }
 
 type Book struct {
-	Schema *entity.Schema
+	Schema         *entity.Schema
+	CollectionName string
 }
 
 func (b *Book) CreateCollection() error {
-	defer collections.CloseConnection(collections.MilvusClient)
+	//defer collections.CloseConnection(collections.MilvusClient)
+	schema.CollectionName = b.CollectionName
 	b.Schema = schema
 
 	collectionNames, _ := collections.GetCollectionNames(context.Background(), collections.MilvusClient)

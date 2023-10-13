@@ -96,7 +96,24 @@ func CreateCollection(ctx context.Context, client *client.Client, schema *entity
 }
 
 func DropCollection(ctx context.Context, client *client.Client, collectionName string) error {
-	err :=  (*client).DropCollection(ctx,collectionName)
+	err := (*client).DropCollection(ctx, collectionName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func RenameCollection(ctx context.Context, client *client.Client, collectionName string, newName string) error {
+	err := (*client).RenameCollection(ctx, collectionName, newName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func CreatePartition(ctx context.Context, client *client.Client, collectionName string, partitionName string) error {
+	err := (*client).CreatePartition(ctx, collectionName, partitionName)
 	if err != nil {
 		return err
 	}
