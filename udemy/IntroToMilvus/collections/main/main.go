@@ -52,8 +52,14 @@ func main() {
 		log.Println("failed to create Books:", err.Error())
 		os.Exit(1)
 	}
-
 	log.Println("Books created:", recordCount)
+
+	err = b.DeleteBooks("book_id in [0, 999]")
+	if err != nil {
+		log.Println("failed to delete Books:", err.Error())
+		os.Exit(1)
+	}
+	log.Println("1000 Books deleted from original", recordCount)
 
 	err = collections.DropCollection(context.Background(), collections.MilvusClient, "books")
 	if err != nil {
