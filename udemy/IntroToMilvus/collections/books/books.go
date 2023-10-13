@@ -109,7 +109,7 @@ func (b *Books) DeleteBooks(expr string) error {
 	//defer collections.CloseConnection(collections.MilvusClient)
 	err := (*collections.MilvusClient).Delete(
 		context.Background(), // ctx
-		"book",               // CollectionName
+		"books",               // CollectionName
 		"",                   // partitionName
 		expr,                 // expr
 	)
