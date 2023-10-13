@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
-	"vector-db/book"
+	"vector-db/books"
 	"vector-db/collections"
 )
 
@@ -20,42 +20,50 @@ func main() {
 		log.Fatal("failed to list collections:", err.Error())
 	}
 
-	b := book.Book{CollectionName: "BBook"}
+	b := books.Books{CollectionName: "BBooks"}
 
 	// Create a Collection
 	err = b.CreateCollection()
 	if err != nil {
-		log.Println("failed to create Book collection:", err.Error())
+		log.Println("failed to create Books collection:", err.Error())
 		os.Exit(1)
 	}
 
 	err = collections.ListAllCollection(context.Background(), collections.MilvusClient)
 	if err != nil {
-		log.Println("failed to list Book collections:", err.Error())
+		log.Println("failed to list Books collections:", err.Error())
 		os.Exit(1)
 	}
 
-	err = collections.RenameCollection(context.Background(), collections.MilvusClient, "BBook", "book")
+	err = collections.RenameCollection(context.Background(), collections.MilvusClient, "BBooks", "books")
 	if err != nil {
-		log.Println("failed to rename Book collection:", err.Error())
-		os.Exit(1)
-	}
-
-	err = collections.ListAllCollection(context.Background(), collections.MilvusClient)
-	if err != nil {
-		log.Println("failed to list Book collections:", err.Error())
-		os.Exit(1)
-	}
-
-	err = collections.DropCollection(context.Background(), collections.MilvusClient, "book")
-	if err != nil {
-		log.Println("failed to drop Book collections:", err.Error())
+		log.Println("failed to rename Books collection:", err.Error())
 		os.Exit(1)
 	}
 
 	err = collections.ListAllCollection(context.Background(), collections.MilvusClient)
 	if err != nil {
-		log.Println("failed to list Book collections:", err.Error())
+		log.Println("failed to list Books collections:", err.Error())
+		os.Exit(1)
+	}
+
+	recordCount,err := b.CreateBooks()
+	if err != nil {
+		log.Println("failed to create Books:", err.Error())
+		os.Exit(1)
+	}
+
+	log.Println("Books created:", recordCount)
+
+	err = collections.DropCollection(context.Background(), collections.MilvusClient, "books")
+	if err != nil {
+		log.Println("failed to drop Books collections:", err.Error())
+		os.Exit(1)
+	}
+
+	err = collections.ListAllCollection(context.Background(), collections.MilvusClient)
+	if err != nil {
+		log.Println("failed to list Books collections:", err.Error())
 		os.Exit(1)
 	}
 
