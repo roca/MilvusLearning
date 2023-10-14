@@ -47,7 +47,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	recordCount,err := b.CreateBooks()
+	recordCount, err := b.CreateBooks()
 	if err != nil {
 		log.Println("failed to create Books:", err.Error())
 		os.Exit(1)
@@ -60,6 +60,13 @@ func main() {
 		os.Exit(1)
 	}
 	log.Println("1000 Books deleted from original", recordCount)
+
+	err = b.BuildIndex()
+	if err != nil {
+		log.Println("failed to build index:", err.Error())
+		os.Exit(1)
+	}
+	log.Println("Index built on Books collection")
 
 	err = collections.DropCollection(context.Background(), collections.MilvusClient, "books")
 	if err != nil {

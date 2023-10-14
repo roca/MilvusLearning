@@ -91,7 +91,7 @@ func (b *Books) CreateBooks() (int, error) {
 
 	column, err := (*collections.MilvusClient).Insert(
 		context.Background(), // ctx
-		"books",               // CollectionName
+		"books",              // CollectionName
 		"",                   // partitionName
 		idColumn,             // columnarData
 		wordColumn,           // columnarData
@@ -109,7 +109,7 @@ func (b *Books) DeleteBooks(expr string) error {
 	//defer collections.CloseConnection(collections.MilvusClient)
 	err := (*collections.MilvusClient).Delete(
 		context.Background(), // ctx
-		"books",               // CollectionName
+		"books",              // CollectionName
 		"",                   // partitionName
 		expr,                 // expr
 	)
@@ -121,4 +121,30 @@ func (b *Books) DeleteBooks(expr string) error {
 	// This function is under active development on the GO client.
 
 	return nil
+}
+
+// build index on the book_intro field
+func (b *Books) BuildIndex() error {
+	//defer collections.CloseConnection(collections.MilvusClient)
+	idx, err := entity.NewIndexIvfFlat( // NewIndex func
+		entity.L2, // metricType
+		1024,      // ConstructParams
+	)
+	if err != nil {
+		return err
+	}
+
+	err = (*collections.MilvusClient).CreateIndex(
+		context.Background(), // ctx
+		"books",               // CollectionName
+		"book_intro",         // fieldName
+		idx,                  // entity.Index
+		false,                // async
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
