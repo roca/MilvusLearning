@@ -68,11 +68,11 @@ func main() {
 	}
 	log.Println("Index built on Books collection")
 
-	err = collections.DropCollection(context.Background(), collections.MilvusClient, "books")
-	if err != nil {
-		log.Println("failed to drop Books collections:", err.Error())
-		os.Exit(1)
-	}
+	// err = collections.DropCollection(context.Background(), collections.MilvusClient, "books")
+	// if err != nil {
+	// 	log.Println("failed to drop Books collections:", err.Error())
+	// 	os.Exit(1)
+	// }
 
 	err = collections.ListAllCollection(context.Background(), collections.MilvusClient)
 	if err != nil {
