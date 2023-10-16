@@ -1,2 +1,5 @@
 volumes
 milvus-sdk-go
+flower_photos
+sms_collection
+python/notebooks/sms_collection
