@@ -3,6 +3,7 @@ package images
 import (
 	"context"
 	"errors"
+	"math/rand"
 	"slices"
 	"vector-db/collections"
 
@@ -37,7 +38,7 @@ var schema = &entity.Schema{
 type Images struct {
 	Schema         *entity.Schema
 	CollectionName string
-	BookIDs        []int64
+	ImageIDs       []int64
 	Images         [][]float32
 }
 
@@ -58,12 +59,44 @@ func (i *Images) CreateCollection() error {
 	return nil
 }
 
+func (i *Images) CreateImages() (int, error) {
+	//defer collections.CloseConnection(collections.MilvusClient)
+	imageIDs := make([]int64, 0, 2000)
+	images := make([][]float32, 0, 2000)
+	for i := 0; i < 2000; i++ {
+		imageIDs = append(imageIDs, int64(i))
+		v := make([]float32, 0, 2)
+		for j := 0; j < 2; j++ {
+			v = append(v, rand.Float32())
+		}
+		images = append(images, v)
+	}
+	idColumn := entity.NewColumnInt64("image_id", imageIDs)
+	imageColumn := entity.NewColumnFloatVector("image", 2, images)
+
+	i.ImageIDs = imageIDs
+	i.Images = images
+
+	column, err := (*collections.MilvusClient).Insert(
+		context.Background(), // ctx
+		"images",             // CollectionName
+		"",                   // partitionName
+		idColumn,             // columnarData
+		imageColumn,          // columnarData
+	)
+	if err != nil {
+		return -1, err
+	}
+
+	return column.Len(), nil
+}
+
 // Delete items base on a expression
 func (i *Images) DeleteBooks(expr string) error {
 	//defer collections.CloseConnection(collections.MilvusClient)
 	err := (*collections.MilvusClient).Delete(
 		context.Background(), // ctx
-		"images",              // CollectionName
+		"images",             // CollectionName
 		"",                   // partitionName
 		expr,                 // expr
 	)
